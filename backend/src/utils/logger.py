@@ -10,9 +10,10 @@ import os
 load_dotenv()
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
 
-LOG_DIR = Path(__file__).resolve().parent.parent / "logs"
+PROJECT_ROOT = Path(__file__).resolve().parents[2]  # backend ディレクトリをプロジェクトルートとして取得
+LOG_DIR = PROJECT_ROOT / "logs"
 LOG_DIR.mkdir(exist_ok=True)
-
+ 
 def get_logger(name: str = "app") -> logging.Logger:
     logger = logging.getLogger(name)
     logger.setLevel(LOG_LEVEL)
