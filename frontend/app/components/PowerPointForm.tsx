@@ -1,25 +1,28 @@
-// app/components/PowerPointForm.tsx
 import { useState } from 'react';
 
 export default function PowerPointForm() {
   const [title, setTitle] = useState('');
-  const [slides, setSlides] = useState([
-    { section: '', content: '', image: '' }
+  const [pages, setPages] = useState([
+    { header: '', content: '', template: 'text', images: [''] }
   ]);
 
-  const handleSlideChange = (index: number, field: string, value: string) => {
-    const newSlides = [...slides];
-    newSlides[index][field as keyof typeof newSlides[0]] = value;
-    setSlides(newSlides);
-  };
+  const handlePageChange = (index: number, field: string, value: string) => {
+    const updatedPages = [...pages];
+    if (field === 'images') {
+        updatedPages[index].images = value.split(',').map((s) => s.trim());
+      } else {
+        (updatedPages[index] as any)[field] = value;
+      }
+      setPages(updatedPages);
+    };
 
-  const addSlide = () => {
-    setSlides([...slides, { section: '', content: '', image: '' }]);
+  const addPage = () => {
+    setPages([...pages, { header: '', content: '', template: 'text', images: [''] }]);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const payload = { title, slides };
+    const payload = { title, pages };
 
     try {
       const res = await fetch('http://localhost:5000/generate', {
@@ -58,28 +61,35 @@ export default function PowerPointForm() {
           />
         </div>
 
-        {slides.map((slide, index) => (
+        {pages.map((page, index) => (
           <div key={index} className="border p-4 rounded-md bg-gray-50">
-            <h2 className="font-semibold mb-2">スライド {index + 1}</h2>
+            <h2 className="font-semibold mb-2">ページ {index + 1}</h2>
             <input
               type="text"
-              placeholder="セクション"
-              value={slide.section}
-              onChange={(e) => handleSlideChange(index, 'section', e.target.value)}
+              placeholder="見出し（header）"
+              value={page.header}
+              onChange={(e) => handlePageChange(index, 'header', e.target.value)}
               className="mb-2 w-full px-2 py-1 border rounded"
             />
             <textarea
-              placeholder="内容"
-              value={slide.content}
-              onChange={(e) => handleSlideChange(index, 'content', e.target.value)}
+              placeholder="内容（content）"
+              value={page.content}
+              onChange={(e) => handlePageChange(index, 'content', e.target.value)}
               className="mb-2 w-full px-2 py-1 border rounded"
               rows={3}
             />
             <input
               type="text"
-              placeholder="画像URL (任意)"
-              value={slide.image}
-              onChange={(e) => handleSlideChange(index, 'image', e.target.value)}
+              placeholder="テンプレート（text, image, tableなど）"
+              value={page.template}
+              onChange={(e) => handlePageChange(index, 'template', e.target.value)}
+              className="mb-2 w-full px-2 py-1 border rounded"
+            />
+            <input
+              type="text"
+              placeholder="画像URL（カンマ区切り）"
+              value={page.images.join(', ')}
+              onChange={(e) => handlePageChange(index, 'images', e.target.value)}
               className="mb-2 w-full px-2 py-1 border rounded"
             />
           </div>
@@ -87,10 +97,10 @@ export default function PowerPointForm() {
 
         <button
           type="button"
-          onClick={addSlide}
+          onClick={addPage}
           className="py-1 px-3 bg-green-500 text-white rounded hover:bg-green-600"
         >
-          スライドを追加
+          ページを追加
         </button>
 
         <button
@@ -99,7 +109,6 @@ export default function PowerPointForm() {
         >
           資料を生成する
         </button>
-
       </form>
     </div>
   );
