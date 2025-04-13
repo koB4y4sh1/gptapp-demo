@@ -1,6 +1,47 @@
-# Welcome to Remix!
+# フロントエンド
 
-- 📖 [Remix docs](https://remix.run/docs)
+このディレクトリはPowerPointスライド生成アプリケーションのフロントエンドを含んでいます。
+
+## 技術スタック
+- React
+- TypeScript
+- Tailwind CSS
+- Vite
+- Remix
+
+## ディレクトリ構造
+- `app/` - アプリケーションのメインコード
+- `public/` - 静的アセット
+- `node_modules/` - 依存パッケージ
+
+## 設定ファイル
+- `vite.config.ts` - Viteの設定
+- `tsconfig.json` - TypeScriptの設定
+- `tailwind.config.ts` - Tailwind CSSの設定
+- `.eslintrc.cjs` - ESLintの設定
+- `postcss.config.js` - PostCSSの設定
+
+## セットアップ
+
+1. 依存パッケージのインストール:
+```bash
+npm install
+```
+
+2. 開発サーバーの起動:
+```bash
+npm run dev
+```
+
+3. ビルド:
+```bash
+npm run build
+```
+
+4. 本番環境での実行:
+```bash
+npm run start
+```
 
 ## Development
 
