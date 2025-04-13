@@ -3,8 +3,8 @@ import io
 from flask import Flask, request, send_file
 from flask_cors import CORS
 
-from generate import generate_ppt
-from logger import get_logger
+from src.application.generate import generate_ppt
+from backend.src.utils.logger import get_logger
 
 logger = get_logger("app")
 
