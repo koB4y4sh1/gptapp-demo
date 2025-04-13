@@ -1,8 +1,10 @@
 from pptx.util import Inches
+from pptx import Presentation
+from typing import List
 from src.domain.slides.base import Base
 
 class ThreeImageSlide(Base):
-    def __init__(self, prs, header, content, image_paths):
+    def __init__(self, prs: Presentation, header: str, content: str, image_paths: List[str]):
         super().__init__(prs, header, content)
         self.image_paths = image_paths
 

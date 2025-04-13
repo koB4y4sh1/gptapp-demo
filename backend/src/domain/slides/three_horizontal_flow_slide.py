@@ -1,10 +1,12 @@
 from pptx.util import Inches
 from pptx.enum.shapes import MSO_SHAPE
 from pptx.dml.color import RGBColor
+from pptx import Presentation
+from typing import List
 from src.domain.slides.base import Base
 
 class ThreeHorizontalFlowSlide(Base):
-    def __init__(self, prs, header, content, steps):
+    def __init__(self, prs: Presentation, header: str, content: str, steps: List[str]):
         super().__init__(prs, header, content)
         self.steps = steps
 
