@@ -1,0 +1,18 @@
+{
+    "eslint.validate": [
+      "javascript",
+      "typescript",
+      "javascriptreact",
+      "typescriptreact",
+      "html",
+      "vue"
+    ],
+    "eslint.options": {
+      "configFile": "./frontend/.eslintrc.cjs"  // ESLint 設定ファイルのパスを指定
+    },
+    "eslint.workingDirectories": [
+      { "mode": "auto" },  // 自動的にプロジェクトのサブディレクトリを認識
+      { "directory": "./frontend" }  // frontend フォルダを ESLint の作業ディレクトリとして指定
+    ]
+  }
+  
