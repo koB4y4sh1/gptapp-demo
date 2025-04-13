@@ -1,7 +1,7 @@
 from pptx.util import Inches
 from pptx.enum.shapes import MSO_SHAPE
 from pptx.dml.color import RGBColor
-from backend.src.domain.slides.base import Base
+from src.domain.slides.base import Base
 
 class ThreeHorizontalFlowSlide(Base):
     def __init__(self, prs, header, content, steps):

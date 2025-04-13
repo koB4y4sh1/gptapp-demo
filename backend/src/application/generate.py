@@ -1,10 +1,10 @@
 from pptx import Presentation
 from io import BytesIO
-from domain.slides.text_slide import TextSlide
-from domain.slides.image_slide import ImageSlide
-from domain.slides.three_image_slide import ThreeImageSlide
-from domain.slides.table_slide import TableSlide
-from domain.slides.three_horizontal_flow_slide import ThreeHorizontalFlowSlide
+from src.domain.slides.text_slide import TextSlide
+from src.domain.slides.image_slide import ImageSlide
+from src.domain.slides.three_image_slide import ThreeImageSlide
+from src.domain.slides.table_slide import TableSlide
+from src.domain.slides.three_horizontal_flow_slide import ThreeHorizontalFlowSlide
 
 def generate_ppt(data: dict) -> bytes:
     prs = Presentation()

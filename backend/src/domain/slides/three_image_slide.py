@@ -1,5 +1,5 @@
 from pptx.util import Inches
-from backend.src.domain.slides.base import Base
+from src.domain.slides.base import Base
 
 class ThreeImageSlide(Base):
     def __init__(self, prs, header, content, image_paths):

@@ -1,4 +1,4 @@
-from backend.src.domain.slides.base import Base
+from src.domain.slides.base import Base
 
 class TextSlide(Base):
     def build(self):

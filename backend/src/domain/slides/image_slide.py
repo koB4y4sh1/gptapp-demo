@@ -1,6 +1,6 @@
 from pptx import Presentation
 from pptx.util import Inches
-from backend.src.domain.slides.base import Base
+from src.domain.slides.base import Base
 
 class ImageSlide(Base):
     def __init__(self, prs: Presentation, header: str, content: str, image_path: str = None):
