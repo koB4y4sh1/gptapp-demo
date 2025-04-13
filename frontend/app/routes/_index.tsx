@@ -1,5 +1,5 @@
 // app/routes/index.tsx
-import PowerPointForm from '~/components/PowerPointForm';
+import PowerPointForm from '~/pages/PowerPointPage';
 
 export default function Index() {
   return (
