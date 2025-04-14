@@ -1,7 +1,8 @@
-from typing import Dict, Any
+from typing import Dict, Any, List
 from openai import AzureOpenAI
 import os
 import json
+from src.domain.model.response_format.slide_creator_schema import get_slide_creator_schema
 
 client = AzureOpenAI(
     api_version=os.getenv("OPENAI_API_VERSION"),
@@ -16,40 +17,26 @@ def slide_creator_node(state: Dict[str, Any]) -> Dict[str, Any]:
     if not title or not layout:
         raise ValueError("title または layout が不足しています")
 
-    try:
-        layout_json = json.loads(layout)  # layoutはJSON文字列で来る想定
-    except json.JSONDecodeError as e:
-        raise ValueError("layoutのJSONが不正です") from e
-
-    prompt = f"""
+    prompt = """
         あなたは優れたスライドライターです。
-        以下のテーマと構成案に従って、スライド1枚ごとの具体的な内容を JSON で作成してください。
-
-        テーマ: {title}
-
-        構成案:
-        {json.dumps(layout_json, ensure_ascii=False, indent=2)}
-
-        各スライドには以下の形式を使用してください：
-        {{
-        "pages": [
-            {{
-            "header": "スライドタイトル",
-            "content": "このスライドに記載する説明文",
-            "template": "text | image | table | two_column | three_images | three_horizontal_flow",
-            "images": ["image1.png", "image2.png"], // image系テンプレートの場合のみ
-            "table": [["列1", "列2"], ["データ1", "データ2"]] // tableテンプレートのみ
-            }}
-        ]
-        }}
-        """
+        以下のテーマと構成案に従って、スライド1枚ごとの具体的な内容を作成してください。
+        
+        制約事項：
+        - スライドは1枚以上10枚以内で作成してください
+        - 各スライドには必ずタイトル、内容、テンプレートタイプを記載してください
+        - テンプレートタイプは"text"のみ使用可能です
+        - 内容は簡潔かつ具体的に記載してください
+    """
 
     response = client.chat.completions.create(
         model="app-gpt-4o-mini-2024-07-18",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.7,
+        response_format=get_slide_creator_schema()
     )
 
-    slide_json = response.choices[0].message.content.strip()
-
-    return {**state, "slide_json": slide_json}
+    try:
+        slide_json = json.loads(response.choices[0].message.content.strip())
+        return {**state, "slide_json": slide_json}
+    except json.JSONDecodeError as e:
+        raise ValueError(f"JSONの解析に失敗しました: {e}")

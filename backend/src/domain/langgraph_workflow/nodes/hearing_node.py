@@ -1,6 +1,8 @@
-from typing import Dict, Any
+from typing import Dict, Any, List
 from openai import AzureOpenAI
 import os
+import json
+from src.domain.model.response_format.hearing_schema import get_hearing_schema
 
 
 # LangChain経由でもよいが、まずはOpenAI直叩き例
@@ -15,23 +17,24 @@ def hearing_node(state: Dict[str, Any]) -> Dict[str, Any]:
     if not title:
         raise ValueError("title が存在しません")
 
-    prompt = f"""
-あなたは優秀なプレゼン資料作成アシスタントです。
-以下のテーマに基づき、どのような内容を伝えるべきかヒアリングの観点で整理してください。
+    prompt = """
+        あなたは優秀なプレゼン資料作成アシスタントです。
+        以下のテーマに基づき、どのような内容を伝えるべきかヒアリングの観点で整理してください。
 
-テーマ: {title}
-
-必要な情報:
-- 資料の目的
-- 読者の対象
-- 含めるべき主要な話題や章構成
-"""
+        制約事項：
+        - 主要トピックは3つ以上5つ以内で作成してください
+        - 各トピックは簡潔に、かつ具体的に記載してください
+    """
 
     response = client.chat.completions.create(
         model="app-gpt-4o-mini-2024-07-18",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.7,
+        response_format=get_hearing_schema()
     )
 
-    hearing_info = response.choices[0].message.content.strip()
-    return {**state, "hearing_info": hearing_info}
+    try:
+        hearing_info = json.loads(response.choices[0].message.content.strip())
+        return {**state, "hearing_info": hearing_info}
+    except json.JSONDecodeError as e:
+        raise ValueError(f"JSONの解析に失敗しました: {e}")
