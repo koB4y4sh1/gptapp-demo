@@ -22,6 +22,8 @@ if __name__ == "__main__":
     print(final_state["layout"])
     print("\n===== Slide JSON =====")
     print(final_state["slide_json"])
+    print("\n===== 確認結果 =====")
+    print("confirmed:", final_state["confirmed"])
 
     # JSON保存してもOK
     with open("slide_output.json", "w", encoding="utf-8") as f:

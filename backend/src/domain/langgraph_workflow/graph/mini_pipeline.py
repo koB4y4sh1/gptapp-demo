@@ -4,6 +4,7 @@ from typing import TypedDict, Annotated
 from src.domain.langgraph_workflow.nodes.hearing_node import hearing_node
 from src.domain.langgraph_workflow.nodes.layout_node import layout_node
 from src.domain.langgraph_workflow.nodes.slide_creator_node import slide_creator_node
+from src.domain.langgraph_workflow.nodes.check_node import check_node
 
 # 状態管理用の型
 class SlideState(TypedDict):
@@ -11,6 +12,7 @@ class SlideState(TypedDict):
     hearing_info: str
     layout: str
     slide_json: str
+    confirmed: bool
 
 # LangGraphセットアップ
 def build_test_graph():
@@ -19,10 +21,12 @@ def build_test_graph():
     builder.add_node("hearing_node", hearing_node)
     builder.add_node("layout_node", layout_node)
     builder.add_node("slide_creator", slide_creator_node)
+    builder.add_node("check", check_node)
 
     builder.set_entry_point("hearing_node")
     builder.add_edge("hearing_node", "layout_node")
     builder.add_edge("layout_node", "slide_creator")
+    builder.add_edge("slide_creator", "check")
 
     graph = builder.compile()
     return graph
