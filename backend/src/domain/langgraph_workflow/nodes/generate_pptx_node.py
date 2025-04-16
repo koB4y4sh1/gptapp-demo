@@ -1,7 +1,9 @@
 # domain/langgraph_workflow/nodes/generate_pptx_node.py
 import os
+
 from datetime import datetime
-from src.application.generate import generate_pptx
+
+from src.application.generate_slide import generate_pptx
 
 class SlideState(dict):
     pass  # TypedDictと互換性あるようにしておくと便利
