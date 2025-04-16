@@ -1,7 +1,9 @@
 import os
+import uuid
 
-from flask import Blueprint, request, send_file, jsonify
+from flask import Blueprint, request, jsonify
 
+from src.application.slide_storage import save_slide
 from src.domain.langgraph_workflow.workflow import build_main_graph
 from src.utils.logger import get_logger
 
@@ -9,6 +11,7 @@ logger = get_logger("routes.generate")
 
 bp = Blueprint('generate', __name__)
 graph = build_main_graph()
+state_store = {}  # セッション状態を保存（本来はRedis/DB推奨）
 
 @bp.route("/generate", methods=["POST"])
 def generate():
@@ -17,45 +20,29 @@ def generate():
         data = request.get_json()
         logger.debug(f"リクエストデータ: {data}")
         
-        topic = data.get("title")
-
-        if not topic:
+        title = data.get("title")
+        session_id = str(uuid.uuid4())
+        if not title:
             logger.error("タイトルが指定されていません")
             return jsonify({"error": "タイトルが指定されていません"}), 400
 
         initial_state = {
-            "title": topic
+            "title": title,
+            "confirmed": False  
         }
 
+        # フローの実行
         final_state = graph.invoke(initial_state)
-        pptx_path = final_state.get("pptx_path")
 
-        if not pptx_path:
-            logger.error("PowerPointのパスが生成されていません")
-            return jsonify({"error": "PowerPoint の生成に失敗しました"}), 500
-
-        if not os.path.exists(pptx_path):
-            logger.error(f"PowerPointファイルが存在しません: {pptx_path}")
-            return jsonify({"error": "PowerPoint ファイルが見つかりません"}), 500
-
-        logger.info(f"PowerPointファイルを送信: {pptx_path}")
-        
-        # ファイルを送信
-        response = send_file(
-            pptx_path,
-            as_attachment=True,
-            download_name=f"{topic}.pptx",
-            mimetype="application/vnd.openxmlformats-officedocument.presentationml.presentation"
+        # Supabaseに保存
+        save_slide(
+            user_id= os.getenv("USER_ID"),
+            session_id=session_id,
+            title=title,
+            slide_json=final_state["slide_json"]
         )
+        return jsonify({ "session_id": session_id, "preview": "こんにちは" })
 
-        # 一時ファイルを削除
-        try:
-            os.remove(pptx_path)
-            logger.info(f"一時ファイルを削除: {pptx_path}")
-        except Exception as e:
-            logger.warning(f"一時ファイルの削除に失敗: {e}")
-
-        return response
 
     except Exception as e:
         logger.exception("予期せぬエラーが発生しました")
