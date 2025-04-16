@@ -17,15 +17,19 @@ def slide_creator_node(state: Dict[str, Any]) -> Dict[str, Any]:
     if not title or not layout:
         raise ValueError("title または layout が不足しています")
 
-    prompt = """
+    prompt = f"""
         あなたは優れたスライドライターです。
         以下のテーマと構成案に従って、スライド1枚ごとの具体的な内容を作成してください。
+
+        テーマ: {title}
+        構成案: {json.dumps(layout, ensure_ascii=False, indent=2)}
         
         制約事項：
         - スライドは1枚以上10枚以内で作成してください
         - 各スライドには必ずタイトル、内容、テンプレートタイプを記載してください
         - テンプレートタイプは"text"のみ使用可能です
         - 内容は簡潔かつ具体的に記載してください
+        - 構成案に沿った内容であることを確認してください
     """
 
     response = client.chat.completions.create(

@@ -17,14 +17,18 @@ def layout_node(state: Dict[str, Any]) -> Dict[str, Any]:
     if not title or not hearing_info:
         raise ValueError("title または hearing_info が不足しています")
 
-    prompt = """
+    prompt = f"""
         あなたは資料作成に特化したプレゼン設計のプロです。
         以下の情報を元に、PowerPoint スライドの構成案を作成してください。
+
+        テーマ: {title}
+        ヒアリング結果: {json.dumps(hearing_info, ensure_ascii=False, indent=2)}
         
         制約事項：
         - スライドは1枚以上10枚以内で作成してください
         - 各スライドには必ずタイトル、テンプレートタイプ、説明を記載してください
         - テンプレートタイプは"text"のみ使用可能です
+        - ヒアリング結果を反映した構成にしてください
     """
 
     response = client.chat.completions.create(
