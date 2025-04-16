@@ -37,5 +37,7 @@ frontend/dist/
 # ======================
 
 # OS 由来のファイルなど
+*.pdf
+*.pptx
 *.log
 .DS_Store

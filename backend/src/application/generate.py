@@ -6,7 +6,7 @@ from src.domain.slides.three_image_slide import ThreeImageSlide
 from src.domain.slides.table_slide import TableSlide
 from src.domain.slides.three_horizontal_flow_slide import ThreeHorizontalFlowSlide
 
-def generate_ppt(data: dict) -> bytes:
+def generate_pptx(data: dict) -> bytes:
     prs = Presentation()
     slides = data.get("pages", [])
 
