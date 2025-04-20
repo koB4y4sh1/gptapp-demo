@@ -14,6 +14,7 @@ export const meta: MetaFunction = () => {
 export default function ChatPage() {
   const [sessionId, setSessionId] = useState("");
   const [preview, setPreview] = useState("");
+  const [slideStructure, setSlideStructure] = useState<any[] | null>(null);
   const [cancel, setCancel] = useState(false);
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -35,7 +36,21 @@ export default function ChatPage() {
       setSessionId(data.sessionId);
       setPreview(data.preview);
 
-      const assistantMessage: ChatMessage = { role: "assistant", content: data.preview };
+      // previewがJSONならパースしてスライド構成として保持
+      let parsed = null;
+      try {
+        parsed = typeof data.preview === "string" ? JSON.parse(data.preview) : data.preview;
+        console.log(parsed)
+        if (Array.isArray(parsed)) {
+          setSlideStructure(parsed);
+        } else {
+          setSlideStructure(null);
+        }
+      } catch {
+        setSlideStructure(null);
+      }
+
+      const assistantMessage: ChatMessage = { role: "assistant", content: "以下のスライド構成でスライドを作成します。" };
       setMessages(prev => [...prev, assistantMessage]);
       setStatus("waiting_confirmation");
     } catch {
@@ -80,6 +95,8 @@ export default function ChatPage() {
       setStatus("idle");
     } else {
       setStatus("revising");
+      setSlideStructure(null);
+      setPreview("");
       setMessages(prev => [
         ...prev,
         { role: "assistant", content: "訂正する内容を入力してください。" },
@@ -96,6 +113,7 @@ export default function ChatPage() {
       onInputChange={handleInputChange}
       onSend={handleSend}
       onConfirm={handleConfirm}
+      slideStructure={slideStructure ?? undefined}
     />
   );
 }
