@@ -1,16 +1,32 @@
-# ドメインモデル
+# ドメイン層
 
-このディレクトリには、アプリケーションのコアとなるドメインモデルが含まれています。
+このディレクトリは、AIを活用したプレゼンテーション自動生成アプリケーションのコアとなるドメインロジックを実装しています。ドメイン層はアプリケーションの中心的な部分であり、ビジネスルールとロジックを表現します。
 
 ## ディレクトリ構造
 
 ```
-model/
-├── response_format/        # OpenAI APIのレスポンス形式定義
-│   ├── hearing_schema.py   # ヒアリング用スキーマ
-│   ├── layout_schema.py    # レイアウト用スキーマ
-│   └── slide_creator_schema.py  # スライド作成用スキーマ
-└── ...                     # その他のドメインモデル
+domain/
+├── model/                      # ドメインモデル
+│   ├── response_format/        # OpenAI APIのレスポンス形式定義
+│   │   ├── hearing_schema.py   # ヒアリングノードのスキーマ
+│   │   ├── layout_schema.py    # レイアウトノードのスキーマ
+│   │   ├── schema.py           # 共通スキーマ定義
+│   │   └── slide_creator_schema.py # スライド作成ノードのスキーマ
+├── langgraph_workflow/         # LangGraphワークフロー
+│   ├── nodes/                  # ワークフローの各ノード
+│   │   ├── check_node.py       # 検証ノード
+│   │   ├── generate_pptx_node.py # PowerPoint生成ノード
+│   │   ├── hearing_node.py     # ヒアリングノード
+│   │   ├── layout_node.py      # レイアウトノード
+│   │   └── slide_creator_node.py # スライド作成ノード
+│   └── workflow.py             # ワークフロー定義
+└── slides/                     # スライド関連のドメインロジック
+    ├── base.py                 # 基本スライドクラス
+    ├── image_slide.py          # 画像スライド
+    ├── table_slide.py          # テーブルスライド
+    ├── text_slide.py           # テキストスライド
+    ├── three_horizontal_flow_slide.py # フローチャートスライド
+    └── three_image_slide.py    # 3画像スライド
 ```
 
 ## スキーマ定義
