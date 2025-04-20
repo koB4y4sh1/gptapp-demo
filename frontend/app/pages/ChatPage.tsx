@@ -1,6 +1,8 @@
 import { useState } from "react";
 import type { MetaFunction } from "@remix-run/node";
-import Chat from "../components/Chat";
+import Chat, { ChatMessage, ChatStatus } from "../components/Chat";
+import { generateSlide } from "../interfaces/chat/generateSlide";
+import { confirmSlide } from "../interfaces/chat/confirmSlide";
 
 export const meta: MetaFunction = () => {
   return [
@@ -12,59 +14,88 @@ export const meta: MetaFunction = () => {
 export default function ChatPage() {
   const [sessionId, setSessionId] = useState("");
   const [preview, setPreview] = useState("");
-  const [cancel,setCancel] = useState(false);
+  const [cancel, setCancel] = useState(false);
 
-  const handleGenerate = async (title: string) => {
-    const res = await fetch("http://localhost:5000/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, session_id: sessionId }),
-    });
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [input, setInput] = useState("");
+  const [status, setStatus] = useState<ChatStatus>("idle");
 
-    if (!res.ok) {
-      throw new Error("生成リクエストに失敗しました");
+  // メッセージ送信時
+  const handleSend = async () => {
+    if (!input.trim() || status !== "idle") return;
+
+    const userMessage: ChatMessage = { role: "user", content: input };
+    setMessages(prev => [...prev, userMessage]);
+    setInput("");
+    setStatus("loading");
+
+    try {
+      // 生成API呼び出し
+      const data = await generateSlide(userMessage.content, sessionId);
+      setSessionId(data.sessionId);
+      setPreview(data.preview);
+
+      const assistantMessage: ChatMessage = { role: "assistant", content: data.preview };
+      setMessages(prev => [...prev, assistantMessage]);
+      setStatus("waiting_confirmation");
+    } catch {
+      setMessages(prev => [...prev, { role: "assistant", content: "エラーが発生しました" }]);
+      setStatus("idle");
     }
-
-    const data = await res.json();
-    setSessionId(data.session_id);
-    setPreview(data.preview);
-    return data.preview;
   };
 
-  const handleConfirm = async (confirmed: boolean) => {
-    if (!sessionId) {
-      throw new Error("セッションIDがありません");
-    }
-
-    const res = await fetch("http://localhost:5000/confirm", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ session_id: sessionId, confirmed }),
-    });
-
-    if (!res.ok) {
-      throw new Error("確認リクエストに失敗しました");
-    }
-
-    const blob = await res.blob();
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "presentation.pptx";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
+  // 入力欄変更時
+  const handleInputChange = (value: string) => {
+    setInput(value);
   };
 
-  const handleSendMessage = async (message: string, confirmed: boolean): Promise<string> => {
-    if (!confirmed) {
-      return await handleGenerate(message);
+  // 確認ボタン押下時
+  const handleConfirm = async (isConfirmed: boolean) => {
+    setMessages(prev => [...prev, { role: "user", content: isConfirmed ? "はい" : "いいえ" }]);
+
+    if (isConfirmed) {
+      setStatus("confirmed");
+      try {
+        if (!sessionId) throw new Error("セッションIDがありません");
+        const blob = await confirmSlide(sessionId, true);
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "presentation.pptx";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+
+        setMessages(prev => [
+          ...prev,
+          { role: "assistant", content: "プレゼンテーションをダウンロードしました。" },
+        ]);
+      } catch {
+        setMessages(prev => [
+          ...prev,
+          { role: "assistant", content: "エラーが発生しました" },
+        ]);
+      }
+      setStatus("idle");
     } else {
-      await handleConfirm(confirmed);
-      return cancel ? "生成をキャンセルしました。" : "プレゼンテーションをダウンロードしました。";
+      setStatus("revising");
+      setMessages(prev => [
+        ...prev,
+        { role: "assistant", content: "訂正する内容を入力してください。" },
+      ]);
+      setStatus("idle");
     }
   };
 
-  return <Chat onSendMessage={handleSendMessage} />;
-} 
+  return (
+    <Chat
+      messages={messages}
+      input={input}
+      status={status}
+      onInputChange={handleInputChange}
+      onSend={handleSend}
+      onConfirm={handleConfirm}
+    />
+  );
+}
