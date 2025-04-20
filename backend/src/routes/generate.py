@@ -41,7 +41,7 @@ def generate():
             title=title,
             slide_json=final_state["slide_json"]
         )
-        return jsonify({ "session_id": session_id, "preview": "こんにちは" })
+        return jsonify({ "session_id": session_id, "preview": "以下の内容でスライドを提案します。" }), 200
 
 
     except Exception as e:
