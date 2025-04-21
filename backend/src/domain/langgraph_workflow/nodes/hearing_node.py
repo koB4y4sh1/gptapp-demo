@@ -1,9 +1,10 @@
-from typing import Dict, Any, List
+from typing import Dict, Any
 from openai import AzureOpenAI
 import os
 import json
 from src.utils.logger import get_logger
 from src.domain.model.response_format.hearing_schema import get_hearing_schema
+from backend.src.infrastructure.azureopenai.chat import chat_completion
 
 logger = get_logger("domain.langgraph_workflow.nodes.hearing_node")
 
@@ -31,11 +32,8 @@ def hearing_node(state: Dict[str, Any]) -> Dict[str, Any]:
         - テーマに沿った内容であることを確認してください
     """
 
-    response = client.chat.completions.create(
-        model="app-gpt-4o-mini-2024-07-18",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.7,
-        response_format=get_hearing_schema()
+    response = chat_completion(
+        prompt=prompt, response_format=get_hearing_schema()
     )
     
 

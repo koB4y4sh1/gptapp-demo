@@ -3,7 +3,7 @@ import uuid
 
 from flask import Blueprint, request, jsonify
 
-from src.application.slide_storage import save_slide
+from src.infrastructure.supabase.slide_storage import save_slide
 from src.domain.langgraph_workflow.workflow import build_main_graph
 from src.utils.logger import get_logger
 

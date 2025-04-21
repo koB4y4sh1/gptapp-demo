@@ -3,6 +3,7 @@ from openai import AzureOpenAI
 import os
 import json
 from src.domain.model.response_format.layout_schema import get_layout_schema
+from backend.src.infrastructure.azureopenai.chat import chat_completion
 
 client = AzureOpenAI(
     api_version=os.getenv("OPENAI_API_VERSION"),
@@ -30,12 +31,8 @@ def layout_node(state: Dict[str, Any]) -> Dict[str, Any]:
         - テンプレートタイプは"text"のみ使用可能です
         - ヒアリング結果を反映した構成にしてください
     """
-
-    response = client.chat.completions.create(
-        model="app-gpt-4o-mini-2024-07-18",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.7,
-        response_format=get_layout_schema()
+    response = chat_completion(
+        prompt=prompt, response_format=get_layout_schema()
     )
 
     try:

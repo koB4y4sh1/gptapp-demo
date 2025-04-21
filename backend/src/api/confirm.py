@@ -2,8 +2,8 @@ import os
 
 from flask import Blueprint, request, jsonify, send_file
 
-from src.application.slide_storage import update_slide
-from src.application.slide_storage import get_session_state
+from src.infrastructure.supabase.slide_storage import update_slide
+from src.infrastructure.supabase.slide_storage import get_session_state
 from src.domain.langgraph_workflow.workflow import build_main_graph
 from src.utils.logger import get_logger
 
