@@ -106,14 +106,16 @@ export default function ChatPage() {
   };
 
   return (
-    <Chat
-      messages={messages}
-      input={input}
-      status={status}
-      onInputChange={handleInputChange}
-      onSend={handleSend}
-      onConfirm={handleConfirm}
-      slideStructure={slideStructure ?? undefined}
-    />
+    <div >
+      <Chat
+        messages={messages}
+        input={input}
+        status={status}
+        onInputChange={handleInputChange}
+        onSend={handleSend}
+        onConfirm={handleConfirm}
+        slideStructure={slideStructure ?? undefined}
+      />
+    </div>
   );
 }
