@@ -6,3 +6,9 @@ azureopenai = AzureOpenAI(
     azure_endpoint=os.getenv("OPENAI_ENDPOINT"),
     api_key=os.getenv("OPENAI_API_KEY"),
 )
+
+dall_e = AzureOpenAI(
+    api_version=os.getenv("DALL_E_API_VERSION"),
+    azure_endpoint=os.getenv("DALL_E_ENDPOINT"),
+    api_key=os.getenv("DALL_E_API_KEY"),
+)
