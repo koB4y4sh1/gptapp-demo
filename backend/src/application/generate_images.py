@@ -1,5 +1,6 @@
 import os
 import requests
+import time
 from datetime import datetime
 from typing import  List
 from src.utils.logger import get_logger
@@ -21,18 +22,26 @@ def generate_images(prompts: List[str], save_local: bool = True) -> List[str]:
             )
             url = response.data[0].url
             if save_local and url:
-                # 画像をダウンロードして一時保存
-                try:
-                    img_data = requests.get(url).content
-                    temp_dir = os.path.join("temp", "images")
-                    os.makedirs(temp_dir, exist_ok=True)
-                    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-                    filename = f"slideimg_{timestamp}_{idx}.png"
-                    local_path = os.path.join(temp_dir, filename)
-                    with open(local_path, "wb") as f:
-                        f.write(img_data)
-                    results.append(local_path)
-                except Exception as e:
+                temp_dir = os.path.join("temp", "images")
+                os.makedirs(temp_dir, exist_ok=True)
+                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                filename = f"slideimg_{timestamp}_{idx}.png"
+                local_path = os.path.join(temp_dir, filename)
+                start_time = time.time()
+                success = False
+                last_error = None
+                while time.time() - start_time < 5:
+                    try:
+                        img_data = requests.get(url).content
+                        with open(local_path, "wb") as f:
+                            f.write(img_data)
+                        results.append(local_path)
+                        success = True
+                        break
+                    except Exception as e:
+                        last_error = e
+                        time.sleep(0.5)
+                if not success:
                     logger.error(f"⚠️ 画像のダウンロード失敗 リトライ回数: {last_error}")
                     raise RuntimeError("画像のダウンロードに失敗しました")
             else:
