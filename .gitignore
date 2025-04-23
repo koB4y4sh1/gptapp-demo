@@ -15,7 +15,9 @@ backend/*.pyc
 
 # ログファイルやログディレクトリ
 backend/logs/
+backend/temp/
 
+# 一時フォルダ
 
 # ======================
 # Frontend の無視対象

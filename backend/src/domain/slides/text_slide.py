@@ -1,4 +1,4 @@
-from pptx import Presentation
+from pptx.presentation import Presentation
 from src.domain.slides.base import Base
 
 class TextSlide(Base):

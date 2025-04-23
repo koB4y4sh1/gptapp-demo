@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from pptx import Presentation
+from pptx.presentation import Presentation
 
 class Base(ABC):
     def __init__(self, prs: Presentation, header: str, content: str):

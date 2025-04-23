@@ -23,7 +23,7 @@ def generate():
         title = data.get("title")
         session_id = str(uuid.uuid4())
         if not title:
-            logger.error("タイトルが指定されていません")
+            logger.error("⛔ タイトルが指定されていません")
             return jsonify({"error": "タイトルが指定されていません"}), 400
 
         initial_state = {

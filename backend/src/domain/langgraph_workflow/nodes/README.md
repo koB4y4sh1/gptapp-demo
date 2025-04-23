@@ -28,8 +28,7 @@
 - **目的**: スライド内容に応じて画像を自動生成し、各スライドに画像URLまたはローカルパスを付与
 - **入力**: スライド内容（`slide_json`）
 - **出力**: 
-  - 画像パスリスト（`image_paths`）
-  - 各スライドの`images`欄に画像パス（またはURL）を追加
+  - `slide_json`: 各スライドの`images`欄に画像パスが追加されたスライドJSON
 
 #### 画像生成APIの利用について
 - OpenAI Image API（DALL·E 3）を利用
@@ -67,7 +66,16 @@
 ```JSON
 {
   "title": "Pythonの基礎",
-  "hearing_info": "この資料はプログラミング初心者に向けてPythonの概要と基本構文を紹介..."
+  "hearing_info": {
+    "purpose": "Pythonの基礎について初心者に分かりやすく説明し、プログラミングの入門として活用できる資料を作成する。", 
+    "target_audience": "プログラミング未経験者やPython初心者、基本的な文法や使い方を学びたい社会人・学生。", 
+    "main_topics": [
+      "Pythonとは？", 
+      "Pythonの歴史", 
+      "Pythonの活用分野", 
+      "他言語との比較", 
+    ]
+  }
 }
 ```
 
@@ -79,6 +87,11 @@
       "header": "Pythonとは？",
       "template": "text",
       "description": "Pythonの概要と特徴を紹介する"
+    },
+    {
+      "header": "Pythonの歴史",
+      "template": "images",
+      "description": "Pythonの歴史と発展を紹介する"
     },
     {
       "header": "Pythonの活用分野",
@@ -104,6 +117,12 @@
       "template": "text"
     },
     {
+      "header": "プログラムの歴史",
+      "template": "images",
+      "description": "Pythonの歴史と発展を紹介する",
+      "images": ["web.png"]
+    },
+    {
       "header": "活用分野",
       "content": "PythonはWeb開発やデータ分析など様々な分野で使われています。",
       "template": "three_images",
@@ -121,5 +140,49 @@
       ]
     }
   ]
+}
+```
+#### image_nodeのstate["slide_json"]（imageとthree_imageが混在する場合）
+```json
+{
+  "slide_json": {
+    "pages": [
+      {
+        "header": "Pythonとは？",
+        "content": "Pythonはシンプルで読みやすい構文を持つプログラミング言語です。",
+        "template": "image",
+        "images": [
+          "temp/images/slide1_img1.png"
+        ]
+      },
+      {
+        "header": "プログラムの歴史",
+        "template": "images",
+        "description": "Pythonの歴史と発展を紹介する",
+        "images": ["temp/images/slide1_img1.png"]
+      },
+      {
+        "header": "活用分野",
+        "content": "PythonはWeb開発やデータ分析など様々な分野で使われています。",
+        "template": "three_image",
+        "images": [
+          "temp/images/slide2_img1.png",
+          "temp/images/slide2_img2.png",
+          "temp/images/slide2_img3.png"
+        ]
+      },
+      {
+        "header": "他言語との比較",
+        "content": "以下は主要な言語との比較表です。",
+        "template": "table",
+        "table": [
+          ["言語", "用途", "学習難易度"],
+          ["Python", "汎用", "易しい"],
+          ["Java", "業務アプリ", "中"],
+          ["C++", "システム", "難しい"]
+        ]
+      },
+    ]
+  }
 }
 ```

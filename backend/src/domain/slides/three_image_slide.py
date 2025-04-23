@@ -1,5 +1,5 @@
 from pptx.util import Inches
-from pptx import Presentation
+from pptx.presentation import Presentation
 from typing import List
 from src.domain.slides.base import Base
 
@@ -13,6 +13,9 @@ class ThreeImageSlide(Base):
         slide.shapes.title.text = self.header
         slide.placeholders[1].text = self.content
 
+        if not self.image_paths:
+            return
+        
         # 画像を横並びで配置
         for i, image_path in enumerate(self.image_paths):
             slide.shapes.add_picture(image_path, Inches(1 + i * 3), Inches(1.5), width=Inches(2))

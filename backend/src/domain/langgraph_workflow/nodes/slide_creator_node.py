@@ -3,6 +3,9 @@ from openai import AzureOpenAI
 import os
 import json
 from src.domain.model.response_format.slide_creator_schema import get_slide_creator_schema
+from src.utils.logger import get_logger
+
+logger = get_logger("domain.langgraph_workflow.nodes.hearing_node")
 
 client = AzureOpenAI(
     api_version=os.getenv("OPENAI_API_VERSION"),
@@ -46,6 +49,8 @@ def slide_creator_node(state: Dict[str, Any]) -> Dict[str, Any]:
         for page in slide_json.get("pages", []):
             if "images" not in page:
                 page["images"] = []
+                
+        logger.debug(f"スライド: {slide_json}")
         return {**state, "slide_json": slide_json}
     except json.JSONDecodeError as e:
         raise ValueError(f"JSONの解析に失敗しました: {e}")

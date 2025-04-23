@@ -3,7 +3,10 @@ from openai import AzureOpenAI
 import os
 import json
 from src.domain.model.response_format.layout_schema import get_layout_schema
-from backend.src.infrastructure.azureopenai.chat import chat_completion
+from src.infrastructure.azureopenai.chat import chat_completion
+from src.utils.logger import get_logger
+
+logger = get_logger("src.domain.langgraph_workflow.nodes.layout_node")
 
 client = AzureOpenAI(
     api_version=os.getenv("OPENAI_API_VERSION"),
@@ -14,7 +17,6 @@ client = AzureOpenAI(
 def layout_node(state: Dict[str, Any]) -> Dict[str, Any]:
     title = state.get("title")
     hearing_info = state.get("hearing_info")
-
     if not title or not hearing_info:
         raise ValueError("title または hearing_info が不足しています")
 
@@ -28,7 +30,7 @@ def layout_node(state: Dict[str, Any]) -> Dict[str, Any]:
         制約事項：
         - スライドは1枚以上10枚以内で作成してください
         - 各スライドには必ず「タイトル（header）」「テンプレートタイプ（template）」「説明（description）」を記載してください
-        - テンプレートタイプは以下から`text`, `image`のみ選ぶことができます（用途・特徴を参考にしてください）:
+        - テンプレートタイプは以下から`text`, `image`, `three_images`のみ選ぶことができます（用途・特徴を参考にしてください）:
 
         ## PowerPoint スライドテンプレート一覧
         以下は、スライド生成において使用する各テンプレートの特徴と用途です。プロンプトでスライドレイアウトの指定を行う際に参考にしてください。
@@ -42,7 +44,7 @@ def layout_node(state: Dict[str, Any]) -> Dict[str, Any]:
         - **特徴**: タイトル + 画像1枚。視覚的にインパクトを与える構成。
         - **用途**: 図やグラフの提示、キービジュアルの表示、概念のイメージ化。
 
-        ### 3. `three_image`
+        ### 3. `three_images`
         - **特徴**: タイトル + 横並びの3枚画像。比較や分類を明確に見せられる。
         - **用途**: 商品比較、事例紹介（ビフォー/アフター/結果など）、工程別の説明。
 
@@ -82,6 +84,7 @@ def layout_node(state: Dict[str, Any]) -> Dict[str, Any]:
 
     try:
         layout = json.loads(response.choices[0].message.content.strip())
+        logger.debug(f"構成案: {layout}")
         return {**state, "layout": layout}
     except json.JSONDecodeError as e:
         raise ValueError(f"JSONの解析に失敗しました: {e}")

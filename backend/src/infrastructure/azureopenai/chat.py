@@ -1,7 +1,7 @@
 from src.infrastructure.azureopenai.client import azureopenai
 from openai.types.chat import ChatCompletion
 
-MODEL = "gpt-4.1"
+MODEL = "app-gpt-4o-mini-2024-07-18"
 
 def chat_completion(prompt: str, response_format: dict = None) -> ChatCompletion:
     kwargs = {
