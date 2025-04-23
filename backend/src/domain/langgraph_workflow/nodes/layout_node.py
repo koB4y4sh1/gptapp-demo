@@ -3,7 +3,10 @@ from openai import AzureOpenAI
 import os
 import json
 from src.domain.model.response_format.layout_schema import get_layout_schema
-from backend.src.infrastructure.azureopenai.chat import chat_completion
+from src.infrastructure.azureopenai.chat import chat_completion
+from src.utils.logger import get_logger
+
+logger = get_logger("src.domain.langgraph_workflow.nodes.layout_node")
 
 client = AzureOpenAI(
     api_version=os.getenv("OPENAI_API_VERSION"),
@@ -82,6 +85,7 @@ def layout_node(state: Dict[str, Any]) -> Dict[str, Any]:
 
     try:
         layout = json.loads(response.choices[0].message.content.strip())
+        logger.debug(f"構成案: {layout}")
         return {**state, "layout": layout}
     except json.JSONDecodeError as e:
         raise ValueError(f"JSONの解析に失敗しました: {e}")

@@ -14,7 +14,7 @@ def generate_images(prompts: List[str], save_local: bool = True) -> List[str]:
     """
     results = []
     for idx, prompt in enumerate(prompts):
-        logger.info(f"画像生成プロンプト: {prompt}")
+        logger.debug(f"画像生成プロンプト: {prompt}")
         try:
             response:ImagesResponse = images_generate(
                 prompt=prompt
@@ -33,11 +33,11 @@ def generate_images(prompts: List[str], save_local: bool = True) -> List[str]:
                         f.write(img_data)
                     results.append(local_path)
                 except Exception as e:
-                    logger.error(f"画像のダウンロード/保存エラー: {e}")
-                    results.append(url)  # ダウンロード失敗時はURLを返す
+                    logger.error(f"⚠️ 画像のダウンロード失敗 リトライ回数: {last_error}")
+                    raise RuntimeError("画像のダウンロードに失敗しました")
             else:
                 results.append(url)
         except Exception as e:
-            logger.error(f"画像生成APIエラー: {e}")
+            logger.error(f"❌ 画像生成APIエラー: {e}")
             results.append("")  # 失敗時は空文字
     return results

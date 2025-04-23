@@ -22,7 +22,7 @@ def confirm_and_continue():
         logger.debug(f"セッションID: {session_id}")
         
         if not session_id:
-            logger.error("セッションIDが指定されていません")
+            logger.error("⛔ セッションIDが指定されていません")
             return jsonify({ "error": "セッションIDが必要です" }), 400
         
         # Supabaseから状態を取得
@@ -30,7 +30,7 @@ def confirm_and_continue():
             user_id= os.getenv("USER_ID"),
             session_id=session_id)  
         if not record:
-            logger.error(f"セッションが存在しません: {session_id}")
+            logger.error(f"⛔セッションが存在しません: {session_id}")
             return jsonify({ "error": "セッションが存在しません" }), 404
 
         prev_state = {
@@ -50,14 +50,14 @@ def confirm_and_continue():
         update_slide(os.getenv("USER_ID"), session_id, pptx_path ,final_state["confirmed"])
 
         if not pptx_path:
-            logger.error("PowerPointのパスが生成されていません")
+            logger.error("❌ PowerPointのパスが生成されていません")
             return jsonify({ "error": "生成に失敗しました" }), 500
 
         if not os.path.exists(pptx_path):
-            logger.error(f"PowerPointファイルが存在しません: {pptx_path}")
+            logger.error(f"❌ PowerPointファイルが存在しません: {pptx_path}")
             return jsonify({ "error": "生成に失敗しました" }), 500
 
-        logger.info(f"PowerPointファイルを送信: {pptx_path}")
+        logger.info(f"📦 PowerPointファイルを送信: {pptx_path}")
         return send_file(
             pptx_path,
             as_attachment=True,
@@ -66,5 +66,5 @@ def confirm_and_continue():
         )
 
     except Exception as e:
-        logger.exception("予期せぬエラーが発生しました")
+        logger.exception("🚨 予期せぬエラーが発生しました")
         return jsonify({ "error": str(e) }), 500

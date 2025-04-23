@@ -4,12 +4,14 @@ import os
 from datetime import datetime
 
 from src.application.generate_slide import generate_pptx
+from src.utils.logger import get_logger
 
+logger = get_logger("src.domain.langgraph_workflow.nodes.generate_pptx_node")
 class SlideState(dict):
     pass  # TypedDictと互換性あるようにしておくと便利
 
 def generate_pptx_node(state: SlideState) -> dict:
-    print("📦 PowerPoint を生成中...")
+    logger.info("🔧 PowerPoint を生成中...")
 
     try:
         title = state["title"]
@@ -30,12 +32,12 @@ def generate_pptx_node(state: SlideState) -> dict:
         with open(temp_path, "wb") as f:
             f.write(pptx_data)
 
-        print(f"✅ 一時ファイルを保存しました: {temp_path}")
+        logger.info(f"✅ 一時ファイルを保存しました: {temp_path}")
 
         return {"pptx_path": temp_path}
     except KeyError as e:
-        print(f"❌ エラー: 必要なキーが存在しません - {e}")
+        logger.error(f"❌ エラー: 必要なキーが存在しません - {e}")
         raise
     except Exception as e:
-        print(f"❌ エラー: PowerPoint生成中に問題が発生しました - {e}")
+        logger.error(f"❌ エラー: PowerPoint生成中に問題が発生しました - {e}")
         raise
