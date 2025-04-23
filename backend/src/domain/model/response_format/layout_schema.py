@@ -20,7 +20,7 @@ def get_layout_schema() -> Dict[str, Any]:
                                 },
                                 "template": {
                                     "type": "string",
-                                    "enum": ["text"],
+                                    "enum": ["text","images","three_images"],
                                     "description": "スライドのテンプレートタイプ"
                                 },
                                 "description": {

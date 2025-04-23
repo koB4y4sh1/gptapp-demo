@@ -24,11 +24,16 @@ def get_slide_creator_schema() -> Dict[str, Any]:
                                 },
                                 "template": {
                                     "type": "string",
-                                    "enum": ["text"],
+                                    "enum": ["text", "image", "three_images"],
                                     "description": "スライドのテンプレートタイプ"
+                                },
+                                "images": {
+                                    "type": "array",
+                                    "items": {"type": "string"},
+                                    "description": "画像パス"
                                 }
                             },
-                            "required": ["header", "content", "template"],
+                            "required": ["header", "content", "template", "images"],
                             "additionalProperties": False
                         }
                     }
@@ -37,4 +42,4 @@ def get_slide_creator_schema() -> Dict[str, Any]:
                 "additionalProperties": False
             }
         }
-    } 
+    }
