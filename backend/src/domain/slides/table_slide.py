@@ -1,4 +1,4 @@
-from pptx import Presentation
+from pptx.presentation import Presentation
 from pptx.util import Inches
 from pptx.util import Pt
 from pptx.dml.color import RGBColor
