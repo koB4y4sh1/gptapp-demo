@@ -2,8 +2,8 @@ from flask import Flask
 from flask_cors import CORS
 
 from src.utils.logger import get_logger
-from src.routes.generate import bp as generate_bp
-from src.routes.confirm import bp as confirm_bp
+from src.api.generate import bp as generate_bp
+from src.api.confirm import bp as confirm_bp
 
 logger = get_logger("app")
 

@@ -1,4 +1,4 @@
-from src.interfaces.client.supabase_client import supabase
+from src.infrastructure.supabase.client import supabase
 
 def get_session_state(user_id: str,session_id: str) -> dict | None:
     response = (
