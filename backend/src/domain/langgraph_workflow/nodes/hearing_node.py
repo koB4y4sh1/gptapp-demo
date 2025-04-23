@@ -4,7 +4,7 @@ import os
 import json
 from src.utils.logger import get_logger
 from src.domain.model.response_format.hearing_schema import get_hearing_schema
-from backend.src.infrastructure.azureopenai.chat import chat_completion
+from src.infrastructure.azureopenai.chat import chat_completion
 
 logger = get_logger("domain.langgraph_workflow.nodes.hearing_node")
 
@@ -39,7 +39,7 @@ def hearing_node(state: Dict[str, Any]) -> Dict[str, Any]:
 
     try:
         hearing_info = json.loads(response.choices[0].message.content.strip())
-        logger.debug(f"hearing_info: {hearing_info}")
+        logger.debug(f"ヒアリング結果: {hearing_info}")
         return {**state, "hearing_info": hearing_info}
     except json.JSONDecodeError as e:
         raise ValueError(f"JSONの解析に失敗しました: {e}")
