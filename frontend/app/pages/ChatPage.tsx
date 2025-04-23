@@ -15,8 +15,6 @@ export default function ChatPage() {
   const [sessionId, setSessionId] = useState("");
   const [preview, setPreview] = useState("");
   const [slideStructure, setSlideStructure] = useState<any[] | null>(null);
-  const [cancel, setCancel] = useState(false);
-
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [status, setStatus] = useState<ChatStatus>("idle");
