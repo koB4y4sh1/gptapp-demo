@@ -19,8 +19,6 @@ def generate_images(prompts: List[str], save_local: bool = True) -> List[str]:
             response:ImagesResponse = images_generate(
                 prompt=prompt
             )
-            print(response.data)
-            print(response.data[0])
             url = response.data[0].url
             if save_local and url:
                 # 画像をダウンロードして一時保存
