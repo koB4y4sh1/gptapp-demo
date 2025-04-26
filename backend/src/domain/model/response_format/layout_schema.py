@@ -1,4 +1,5 @@
 from typing import Dict, Any
+from src.domain.model.type.slide_template import TemplateType
 
 def get_layout_schema() -> Dict[str, Any]:
     return {
@@ -20,7 +21,7 @@ def get_layout_schema() -> Dict[str, Any]:
                                 },
                                 "template": {
                                     "type": "string",
-                                    "enum": ["text","images","three_images"],
+                                    "enum": TemplateType.get_values(),
                                     "description": "スライドのテンプレートタイプ"
                                 },
                                 "description": {

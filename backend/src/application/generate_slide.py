@@ -1,10 +1,11 @@
 from pptx import Presentation
 from io import BytesIO
-from src.domain.slides.text_slide import TextSlide
-from src.domain.slides.image_slide import ImageSlide
-from src.domain.slides.three_image_slide import ThreeImageSlide
-from src.domain.slides.table_slide import TableSlide
-from src.domain.slides.three_horizontal_flow_slide import ThreeHorizontalFlowSlide
+from src.domain.model.slides.text_slide import TextSlide
+from src.domain.model.slides.image_slide import ImageSlide
+from src.domain.model.slides.three_image_slide import ThreeImageSlide
+from src.domain.model.slides.table_slide import TableSlide
+from src.domain.model.slides.three_horizontal_flow_slide import ThreeHorizontalFlowSlide
+from src.domain.model.type.slide_template import TemplateType
 
 def generate_pptx(data: dict) -> bytes:
     prs = Presentation()
@@ -18,15 +19,15 @@ def generate_pptx(data: dict) -> bytes:
         table_data = page.get("table", [])
         steps = page.get("steps", [])
 
-        if template == "text":
+        if template == TemplateType.TEXT.value:
             slide = TextSlide(prs, header, content)
-        elif template == "image":
+        elif template == TemplateType.IMAGE.value:
             slide = ImageSlide(prs, header, content, image_paths[0] if image_paths else None)
-        elif template == "three_images":
+        elif template == TemplateType.THREE_IMAGES.value:
             slide = ThreeImageSlide(prs, header, content, image_paths)
-        elif template == "table":
+        elif template == TemplateType.TABLE.value:
             slide = TableSlide(prs, header, content, table_data)
-        elif template == "three_horizontal_flow":
+        elif template == TemplateType.THREE_HORIZONTAL_FLOW.value:
             slide = ThreeHorizontalFlowSlide(prs, header, content, steps)
         else:
             continue
