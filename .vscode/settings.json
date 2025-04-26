@@ -13,6 +13,8 @@
     "eslint.workingDirectories": [
       { "mode": "auto" },  // 自動的にプロジェクトのサブディレクトリを認識
       { "directory": "./frontend" }  // frontend フォルダを ESLint の作業ディレクトリとして指定
-    ]
+    ],
+    "python.envFile": "${workspaceFolder}/backend/.env",
+    "python.analysis.extraPaths": ["./backend"]
   }
   
