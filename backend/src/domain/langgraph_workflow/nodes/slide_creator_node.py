@@ -5,7 +5,7 @@ import json
 from src.domain.model.response_format.slide_creator_schema import get_slide_creator_schema
 from src.utils.logger import get_logger
 
-logger = get_logger("domain.langgraph_workflow.nodes.hearing_node")
+logger = get_logger("domain.langgraph_workflow.nodes.slide_creator_node")
 
 client = AzureOpenAI(
     api_version=os.getenv("OPENAI_API_VERSION"),
