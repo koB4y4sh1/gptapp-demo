@@ -90,7 +90,7 @@
     },
     {
       "header": "Pythonの歴史",
-      "template": "images",
+      "template": "image",
       "description": "Pythonの歴史と発展を紹介する"
     },
     {
@@ -118,8 +118,8 @@
     },
     {
       "header": "プログラムの歴史",
-      "template": "images",
-      "description": "Pythonの歴史と発展を紹介する",
+      "content": "Pythonの歴史と発展を紹介する",
+      "template": "image",
       "images": ["web.png"]
     },
     {
@@ -145,44 +145,42 @@
 #### image_nodeのstate["slide_json"]（imageとthree_imageが混在する場合）
 ```json
 {
-  "slide_json": {
-    "pages": [
-      {
-        "header": "Pythonとは？",
-        "content": "Pythonはシンプルで読みやすい構文を持つプログラミング言語です。",
-        "template": "image",
-        "images": [
-          "temp/images/slide1_img1.png"
-        ]
-      },
-      {
-        "header": "プログラムの歴史",
-        "template": "images",
-        "description": "Pythonの歴史と発展を紹介する",
-        "images": ["temp/images/slide1_img1.png"]
-      },
-      {
-        "header": "活用分野",
-        "content": "PythonはWeb開発やデータ分析など様々な分野で使われています。",
-        "template": "three_image",
-        "images": [
-          "temp/images/slide2_img1.png",
-          "temp/images/slide2_img2.png",
-          "temp/images/slide2_img3.png"
-        ]
-      },
-      {
-        "header": "他言語との比較",
-        "content": "以下は主要な言語との比較表です。",
-        "template": "table",
-        "table": [
-          ["言語", "用途", "学習難易度"],
-          ["Python", "汎用", "易しい"],
-          ["Java", "業務アプリ", "中"],
-          ["C++", "システム", "難しい"]
-        ]
-      },
-    ]
-  }
+  "pages": [
+    {
+      "header": "プログラムの歴史",
+      "content": "Pythonの歴史と発展を紹介する",
+      "template": "image",
+      "images": [
+        "temp/images/slide1_img1.png"
+      ]
+    },
+    {
+      "header": "プログラムの歴史",
+      "template": "image",
+      "description": "Pythonの歴史と発展を紹介する",
+      "images": ["temp/images/slide1_img1.png"]
+    },
+    {
+      "header": "活用分野",
+      "content": "PythonはWeb開発やデータ分析など様々な分野で使われています。",
+      "template": "three_image",
+      "images": [
+        "temp/images/slide2_img1.png",
+        "temp/images/slide2_img2.png",
+        "temp/images/slide2_img3.png"
+      ]
+    },
+    {
+      "header": "他言語との比較",
+      "content": "以下は主要な言語との比較表です。",
+      "template": "table",
+      "table": [
+        ["言語", "用途", "学習難易度"],
+        ["Python", "汎用", "易しい"],
+        ["Java", "業務アプリ", "中"],
+        ["C++", "システム", "難しい"]
+      ]
+    },
+  ]
 }
 ```
