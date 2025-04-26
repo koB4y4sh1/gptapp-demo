@@ -1,9 +1,9 @@
 from pptx.presentation import Presentation
 from pptx.util import Inches
-from src.domain.slides.base import Base
+from src.domain.model.slides.base_slide import BaseSlide
 import os
 
-class ImageSlide(Base):
+class ImageSlide(BaseSlide):
     def __init__(self, prs: Presentation, header: str, content: str, image_path: str = None):
         super().__init__(prs, header, content)
         self.image_path = image_path

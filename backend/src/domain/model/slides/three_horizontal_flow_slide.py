@@ -3,9 +3,9 @@ from pptx.enum.shapes import MSO_SHAPE
 from pptx.dml.color import RGBColor
 from pptx.presentation import Presentation
 from typing import List
-from src.domain.slides.base import Base
+from src.domain.model.slides.base_slide import BaseSlide
 
-class ThreeHorizontalFlowSlide(Base):
+class ThreeHorizontalFlowSlide(BaseSlide):
     def __init__(self, prs: Presentation, header: str, content: str, steps: List[str]):
         super().__init__(prs, header, content)
         self.steps = steps

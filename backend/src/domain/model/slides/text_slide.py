@@ -1,7 +1,7 @@
 from pptx.presentation import Presentation
-from src.domain.slides.base import Base
+from src.domain.model.slides.base_slide import BaseSlide
 
-class TextSlide(Base):
+class TextSlide(BaseSlide):
     def __init__(self, prs: Presentation, header: str, content: str):
         super().__init__(prs, header, content)
 

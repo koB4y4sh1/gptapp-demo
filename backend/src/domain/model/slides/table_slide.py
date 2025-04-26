@@ -3,9 +3,9 @@ from pptx.util import Inches
 from pptx.util import Pt
 from pptx.dml.color import RGBColor
 from typing import List
-from src.domain.slides.base import Base
+from src.domain.model.slides.base_slide import BaseSlide
 
-class TableSlide(Base):
+class TableSlide(BaseSlide):
     def __init__(self, prs: Presentation, header: str, content: str, table_data: List[List[str]]):
         super().__init__(prs, header, content)
         self.table_data = table_data
