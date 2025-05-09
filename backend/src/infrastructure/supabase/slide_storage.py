@@ -25,8 +25,9 @@ def save_slide(user_id: str, session_id: str, title: str, slide_json: dict, conf
     }).execute()
     return response
 
-def update_slide(user_id: str, session_id: str, pptx_path:str, confirmed: bool):
+def update_slide(user_id: str, session_id: str, slide_json: dict, pptx_path:str, confirmed: bool):
     response = supabase.table("slides").update({
+    "slide_json": slide_json,
     "pptx_path": pptx_path,
     "confirmed": confirmed
     }).eq("user_id", user_id).eq("session_id", session_id).execute()

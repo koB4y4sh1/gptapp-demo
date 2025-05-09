@@ -47,7 +47,7 @@ def confirm_and_continue():
         logger.debug(f"生成されたファイルパス: {pptx_path}")
 
         # Supabaseに更新
-        update_slide(os.getenv("USER_ID"), session_id, pptx_path ,final_state["confirmed"])
+        update_slide(os.getenv("USER_ID"), session_id,final_state["slide_json"], pptx_path ,final_state["confirmed"])
 
         if not pptx_path:
             logger.error("❌ PowerPointのパスが生成されていません")

@@ -2,10 +2,11 @@ import os
 import requests
 import time
 from datetime import datetime
-from typing import  List
+from typing import List, Dict, Tuple, Any
+from openai.types.images_response import ImagesResponse
+
 from src.utils.logger import get_logger
 from src.infrastructure.azureopenai.images import images_generate
-from openai.types.images_response import ImagesResponse
 
 logger = get_logger("application.generate_images")
 
@@ -15,7 +16,6 @@ def generate_images(prompts: List[str], save_local: bool = True) -> List[str]:
     """
     results = []
     for idx, prompt in enumerate(prompts):
-        logger.debug(f"画像生成プロンプト: {prompt}")
         try:
             response:ImagesResponse = images_generate(
                 prompt=prompt
