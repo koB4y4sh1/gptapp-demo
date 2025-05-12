@@ -1,6 +1,7 @@
-from src.infrastructure.azureopenai.client import dall_e
+
 from openai.types.images_response import ImagesResponse
 
+from src.infrastructure.azureopenai.client import dall_e
 MODEL = "dall-e-3"
 
 def images_generate(prompt: str) -> ImagesResponse:

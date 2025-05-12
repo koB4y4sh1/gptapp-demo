@@ -12,7 +12,8 @@ logger = get_logger("application.generate_images")
 
 def generate_images(prompts: List[str], save_local: bool = True) -> List[str]:
     """
-    OpenAI Image API（DALL·E 3）で画像を生成し、画像URLリストまたはローカルパスリストを返す
+    画像を生成し、一時保存先のローカルパスリストを返す
+    ["src/temp/images/slideimg_202250424_230222_0","src/temp/images/slideimg_202250424_230222_1","src/temp/images/slideimg_202250424_230222_2"]
     """
     results = []
     for idx, prompt in enumerate(prompts):
