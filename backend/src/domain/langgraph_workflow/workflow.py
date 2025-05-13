@@ -8,18 +8,10 @@ from src.domain.langgraph_workflow.nodes.layout_node import layout_node
 from src.domain.langgraph_workflow.nodes.slide_creator_node import slide_creator_node
 from src.domain.langgraph_workflow.nodes.image_node import image_node
 from src.domain.langgraph_workflow.nodes.generate_pptx_node import generate_pptx_node
+from src.domain.model.type.slide import SlideState
 from src.utils.logger import get_logger
 
 logger = get_logger("src.domain.langgraph_workflow.workflow")
-
-# 状態管理用の型
-class SlideState(TypedDict):
-    title: str
-    hearing_info: str
-    layout: str
-    slide_json: str
-    confirmed: bool
-    pptx_path: str
 
 # 一時ファイルのクリーンアップ
 def cleanup_temp_files():

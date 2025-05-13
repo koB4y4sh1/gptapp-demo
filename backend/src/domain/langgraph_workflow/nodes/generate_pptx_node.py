@@ -3,12 +3,11 @@ import os
 
 from datetime import datetime
 
-from src.application.generate_slide import generate_pptx
 from src.utils.logger import get_logger
+from src.application.generate_slide import generate_pptx
+from src.domain.model.type.slide import SlideState
 
 logger = get_logger("src.domain.langgraph_workflow.nodes.generate_pptx_node")
-class SlideState(dict):
-    pass  # TypedDictと互換性あるようにしておくと便利
 
 def generate_pptx_node(state: SlideState) -> dict:
     logger.info("🔧 PowerPoint を生成中...")
