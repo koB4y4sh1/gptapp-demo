@@ -1,6 +1,5 @@
 # domain/langgraph_workflow/nodes/check_node.py
 from typing import TypedDict
-from langchain_core.messages import AIMessage
 
 from src.utils.logger import get_logger
 
