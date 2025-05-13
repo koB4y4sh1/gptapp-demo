@@ -1,4 +1,3 @@
--- Create Table
 create extension if not exists vector;
 
 create table illustrations (
@@ -11,5 +10,20 @@ create table illustrations (
   created_at timestamp with time zone default now()
 );
 
--- Delete Table
+create index on illustrations using hnsw (embedding vector_cosine_ops);
 
+create or replace function find_similar_illustration(query_embedding vector)
+returns table (
+    id bigint,
+    name text,
+    title text,
+    caption text,
+    url text[]
+)
+as $$
+  select id, name, title, caption, url
+  from illustrations
+  order by embedding <-> query_embedding
+  limit 1;
+$$ language sql
+stable;
