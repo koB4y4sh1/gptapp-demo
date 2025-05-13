@@ -1,42 +1,81 @@
-from typing import Dict, List
+
+import asyncio
 from src.utils.logger import get_logger
-from src.application.generate_images import generate_images
-from src.application.generate_image_prompts import generate_prompt
-from src.domain.model.type.slide_template import TemplateType
+from src.application.gather_similar_images import gather_similar_images
+from src.domain.model.type.template import TemplateType
+from src.domain.model.type.page import Page
+from src.domain.model.type.slide import SlideState
 
 logger = get_logger("domain.langgraph_workflow.nodes.image_node")
 
 
-def image_node(state: Dict[str, (dict|list)]) -> Dict[str, (dict|list)]:
+def image_node(state: SlideState) -> SlideState:
     """
-    スライド内容から画像生成プロンプトを抽出し、templateがimage/three_imageの時だけ画像生成APIを呼び出すノード
+    スライド内容から画像生成プロンプトを抽出し、templateがimage/three_imageの時だけ画像の類似検索を呼び出すノード
     """
     logger.info("🔧 画像を生成中...")
-    slide_json = state.get("slide_json")
-    if not slide_json:
-        raise ValueError("slide_jsonが存在しません")
 
-    # プロンプトとスライド・画像インデックスのリストを作成
-    prompt_tuples = generate_prompt(slide_json)
-    prompts = [pt[0] for pt in prompt_tuples]
-
-    # 画像をローカル保存し、そのパスを返す
-    image_paths = generate_images(prompts, save_local=True) if prompts else []
-    logger.info("✅ 画像生成に成功しました")
-
-    # 各スライドのimages欄に正しく格納
-    pages:List[dict] = slide_json.get("pages", [])
+    # ページオブジェクトを作成
+    pages: list[Page] = [Page(**page_dict) for page_dict in state["slide_json"].get("pages", [])]
     
-    # images欄の初期化
     for page in pages:
-        if page.get("template") in (TemplateType.TABLE.value, TemplateType.THREE_IMAGES.value):
-            page["images"] = []
+        print(page.template.value)
+        # 画像生成の対象外のページはスキップ
+        if page.template.value not in (TemplateType.IMAGE.value, TemplateType.THREE_IMAGES.value):
+            continue
 
-    # 必要なスライドのimagesリストにappend
-    for idx, (_, slide_idx) in enumerate(prompt_tuples):
-        if idx < len(image_paths) and image_paths[idx]:
-            pages[slide_idx]["images"].append(image_paths[idx])
+        # ページのキャプションをもとに類似する画像を取得
+        images = asyncio.run(gather_similar_images(page))
 
-    # 画像パスリストもstateに追加
-    logger.debug(f"画像パス含むslide_json: {slide_json}")
-    return {**state, "slide_json": slide_json}
+        # imagesをpageのimagesに破壊的に代入
+        page.images = [image.url for image in images]
+
+    # 画像パスリストをstateに追加
+    new_slide_json = {"pages": [page.model_dump() for page in pages]}
+    logger.debug(f"画像パス含むslide_json: {new_slide_json}")
+    return {**state, "slide_json": new_slide_json}
+
+if __name__ == "__main__":
+    # テスト用のダミーのスライド状態
+    slide_state = {
+        "title": "テストタイトル",
+        # hearing_info:{}
+        # layout:{}
+        "slide_json": {
+            "pages": [
+                {
+                "header": "Pythonとは",
+                "content": "Pythonの概要を説明する",
+                "template": TemplateType.TEXT,
+                },
+                {
+                "header": "プログラムの歴史",
+                "content": "Pythonの歴史と発展を紹介する",
+                "template": TemplateType.IMAGE,
+                "images": [],
+                "captions": ["説明するイラスト"],
+                },
+                {
+                "header": "活用分野",
+                "content": "PythonはWeb開発やデータ分析など様々な分野で使われています。",
+                "template": TemplateType.THREE_IMAGES,
+                "images": [],
+                "captions": ["活用分野を説明するイラスト1", "Pの活用分野を説明するイラスト2", "活用分野を説明するイラスト3"],
+                },
+                {
+                "header": "他言語との比較",
+                "content": "以下は主要な言語との比較表です。",
+                "template": TemplateType.TABLE,
+                "table": [
+                    ["言語", "用途", "学習難易度"],
+                    ["Python", "汎用", "易しい"],
+                    ["Java", "業務アプリ", "中"],
+                    ["C++", "システム", "難しい"]
+                ]
+                },
+            ]
+        }
+    }
+    # テスト用のダミーの画像
+    result = image_node(slide_state)
+    logger.debug(f"実行結果 (slide_state): {result}")

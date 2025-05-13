@@ -120,13 +120,14 @@
       "header": "プログラムの歴史",
       "content": "Pythonの歴史と発展を紹介する",
       "template": "image",
-      "images": ["web.png"]
+      "images": []
     },
     {
       "header": "活用分野",
       "content": "PythonはWeb開発やデータ分析など様々な分野で使われています。",
       "template": "three_images",
-      "images": ["web.png", "data.png", "ml.png"]
+      "images": [],
+      "captions": ["活用分野を説明するイラスト1", "Pの活用分野を説明するイラスト2", "活用分野を説明するイラスト3"],
     },
     {
       "header": "他言語との比較",
@@ -156,19 +157,21 @@
     },
     {
       "header": "プログラムの歴史",
+      "content": "Pythonの歴史と発展を紹介する",
       "template": "image",
-      "description": "Pythonの歴史と発展を紹介する",
-      "images": ["temp/images/slide1_img1.png"]
+      "images": ["data/images/slide1_img1.png"],
+      "captions": ["説明するイラスト"],
     },
     {
       "header": "活用分野",
       "content": "PythonはWeb開発やデータ分析など様々な分野で使われています。",
       "template": "three_image",
       "images": [
-        "temp/images/slide2_img1.png",
-        "temp/images/slide2_img2.png",
-        "temp/images/slide2_img3.png"
-      ]
+        "data/images/slide2_img1.png",
+        "data/images/slide2_img2.png",
+        "data/images/slide2_img3.png"
+      ],
+      "captions": ["活用分野を説明するイラスト1", "Pの活用分野を説明するイラスト2", "活用分野を説明するイラスト3"],
     },
     {
       "header": "他言語との比較",
