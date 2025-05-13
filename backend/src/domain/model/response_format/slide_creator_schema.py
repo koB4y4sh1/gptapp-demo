@@ -1,5 +1,5 @@
 from typing import Dict, Any
-from src.domain.model.type.slide_template import TemplateType
+from src.domain.model.type.template import TemplateType
 
 def get_slide_creator_schema() -> Dict[str, Any]:
     return {

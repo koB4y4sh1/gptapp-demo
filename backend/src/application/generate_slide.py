@@ -5,7 +5,7 @@ from src.domain.model.slides.image_slide import ImageSlide
 from src.domain.model.slides.three_image_slide import ThreeImageSlide
 from src.domain.model.slides.table_slide import TableSlide
 from src.domain.model.slides.three_horizontal_flow_slide import ThreeHorizontalFlowSlide
-from src.domain.model.type.slide_template import TemplateType
+from src.domain.model.type.template import TemplateType
 
 def generate_pptx(data: dict) -> bytes:
     prs = Presentation()

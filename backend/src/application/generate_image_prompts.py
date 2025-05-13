@@ -1,7 +1,7 @@
 import json
 from typing import List, Dict, Tuple, Any
 from src.domain.model.prompt.image_prompt import ImagePrompt
-from src.domain.model.type.slide_template import TemplateType
+from src.domain.model.type.template import TemplateType
 from src.domain.model.prompt.image_content_prompt import ImageContentPrompt
 from src.domain.model.response_format.image_content_schema import get_image_content_schema
 from src.infrastructure.azureopenai.chat import chat_completion
