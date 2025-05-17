@@ -31,18 +31,18 @@ async def gather_similar_images(page: Page):
     logger.debug(f"result: {results}")
 
     images: list[tuple[int, Image]] = []
-    for res in results:
+    for idx, res in enumerate(results):
         # 類似するイラストが見つからない場合はスキップ
         if res is None:
             continue
         images.append(
             (
-                res["idx"],
+                idx,
                 Image(
-                    name=res["data"]["name"],
-                    title=res["data"]["title"],
-                    caption=res["data"]["caption"],
-                    url=res["data"]["url"],
+                    name=res["name"],
+                    title=res["title"],
+                    caption=res["caption"],
+                    url=res["url"],
                 )
             )
         )
@@ -58,15 +58,15 @@ if __name__ == "__main__":
         # デバッグ用: ダミーのPageオブジェクトを作成
         page_image = Page(
             header="テストヘッダー",
-            content="テスト用のページコンテンツ",
+            content="案内する人",
             template=TemplateType.IMAGE.value,
-            captions=["イラスト1のキャプション"]
+            captions=[""]
             )
         page_three_images = Page(
             header="テストヘッダー",
             content="テスト用のページコンテンツ",
             template=TemplateType.THREE_IMAGES.value,
-            captions=["イラスト1のキャプション", "イラスト2のキャプション", "イラスト3のキャプション"]
+            captions=["スマートデバイス", "パソコン", "デスクトップ"]
             )
         logger.debug("デバッグ実2行: gather_similar_imagesを呼び出します")
         images = await gather_similar_images(page_image)
