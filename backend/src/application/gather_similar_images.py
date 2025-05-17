@@ -6,7 +6,7 @@ from src.domain.model.type.template import TemplateType
 from src.infrastructure.azureopenai.embedding import generate_embedding
 from src.infrastructure.supabase.illustraion import find_similler_image
 
-logger = get_logger("application.gather_similar_images")
+logger = get_logger(__name__)
 
 async def gather_similar_images(page: Page):
     """
@@ -28,7 +28,7 @@ async def gather_similar_images(page: Page):
         for idx, embedding in enumerate(generate_embedding(page.captions))
     ]
     results = await asyncio.gather(*tasks)
-    logger.debug(f"result: {results}")
+    logger.debug(f"📌 埋め込み生成結果: {results}")
 
     images: list[tuple[int, Image]] = []
     for idx, res in enumerate(results):
@@ -50,6 +50,7 @@ async def gather_similar_images(page: Page):
     # 順序を元のインデックスに合わせてソート
     sorted_images = [img for _, img in sorted(images, key=lambda x: x[0])]
     logger.info(f"🔍 検索結果: {len(sorted_images)}件の画像が見つかりました")
+    logger.debug(f"📌 画像の結果: {results}")
     return sorted_images
 
 if __name__ == "__main__":

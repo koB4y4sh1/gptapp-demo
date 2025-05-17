@@ -2,6 +2,7 @@ import os
 
 from flask import Blueprint, request, jsonify, send_file
 
+from src.domain.model.slides.utils import from_json_to_slidestate
 from src.infrastructure.supabase.slide_storage import update_slide
 from src.infrastructure.supabase.slide_storage import get_session_state
 from src.domain.langgraph_workflow.workflow import build_main_graph
@@ -33,6 +34,7 @@ def confirm_and_continue():
             logger.error(f"⛔セッションが存在しません: {session_id}")
             return jsonify({ "error": "セッションが存在しません" }), 404
 
+        # 前回の状態を復元
         prev_state = {
             "title": record.get("title"),
             "slide_json": record.get("slide_json"),
@@ -40,8 +42,10 @@ def confirm_and_continue():
         }
         logger.debug(f"前回の状態: {prev_state}")
 
-        new_state = { **prev_state, "confirmed": True }
-        final_state = graph.invoke(new_state)
+        # フローの実行
+        new_state = from_json_to_slidestate(prev_state)
+        new_state.confirmed = True
+        final_state = graph.invoke(from_json_to_slidestate(new_state))
 
         pptx_path = final_state.get("pptx_path")
         logger.debug(f"生成されたファイルパス: {pptx_path}")

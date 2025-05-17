@@ -1,12 +1,17 @@
 from src.domain.model.prompt.base import BasePrompt
+from src.domain.model.type.slide import HearingInfo
 import json
+import textwrap
 
 class LayoutPrompt(BasePrompt):
     """
-    スライド構成案生成用プロンプトクラス
+    PowerPointスライド構成案生成用プロンプトクラス。
+
+    テーマとヒアリング情報をもとに、OpenAI APIへ送信するプロンプト文を生成する。
     """
 
-    PROMPT_TEMPLATE = """
+    # スライドテンプレートの説明を含むプロンプトテンプレート
+    PROMPT_TEMPLATE = textwrap.dedent("""
         あなたは資料作成に特化したプレゼン設計のプロです。
         以下の情報を元に、PowerPoint スライドの構成案を作成してください。
 
@@ -63,14 +68,41 @@ class LayoutPrompt(BasePrompt):
         - **用途**: 章の切り替え、新しいトピックへの導入。
 
         - ヒアリング結果を反映した構成にしてください
-    """
+    """)
 
-    def __init__(self, title: str, hearing_info: dict):
+    def __init__(self, title: str, hearing_info: HearingInfo):
+        """
+        Args:
+            title (str): スライドのテーマ
+            hearing_info (HearingInfo | dict | str): ヒアリング情報（dictまたはJSON文字列）
+        """
         self.title = title
-        self.hearing_info = json.dumps(hearing_info, ensure_ascii=False, indent=2)
+        self.hearing_info = json.dumps(hearing_info.__dict__, ensure_ascii=False, indent=2)
 
     def build_prompt(self) -> str:
+        """
+        プロンプト文を生成する。
+
+        Returns:
+            str: OpenAI API用のプロンプト文
+        """
         return self.PROMPT_TEMPLATE.format(
             title=self.title,
             hearing_info=self.hearing_info
-        )
+        ).strip()
+
+if __name__ == "__main__":
+    # チェック用ダミーデータ
+    title = "AI活用の最新動向"
+    
+    hearing_info = HearingInfo(
+        purpose= "AI活用の最新動向",
+        target_audience= "AIに興味がある人",
+        main_topics=[
+            "AIとは何か、その基本概念を解説",
+            "現在注目されているAI技術の紹介",
+            "ビジネスや社会"
+        ]
+    )
+    prompt = LayoutPrompt(title, hearing_info).build_prompt()
+    print(prompt)

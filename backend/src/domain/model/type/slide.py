@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List
 from pydantic import BaseModel
 from src.domain.model.type.page import Page
 from src.domain.model.type.template import TemplateType
@@ -18,8 +18,9 @@ class SlideJson(BaseModel):
 
 class SlideState(BaseModel):
     title: str
-    hearing_info: HearingInfo
-    layout: Dict[str, Layout]
-    slide_json: Dict[str, List[Page]]
-    confirmed: bool
-    pptx_path: str
+    confirmed: bool = False
+    pptx_path: str = None
+    hearing_info: HearingInfo = None
+    layout: List[Layout] = None
+    slide: List[Page] = None
+

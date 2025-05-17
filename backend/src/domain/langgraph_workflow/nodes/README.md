@@ -82,7 +82,8 @@
 ### layout_node.pyのstate["layout"]
 ```JSON
 {
-  "pages": [
+  "title": "Pythonの基礎",
+  "layout":[
     {
       "header": "Pythonとは？",
       "template": "text",
@@ -107,9 +108,10 @@
 }
 ```
 
-### slide_creator_node.pyのstate["slide_json"]
+### slide_creator_node.pyのstate["pages"]
 ```JSON
 {
+  "title": "Pythonの基礎",
   "pages": [
     {
       "header": "Pythonとは？",
@@ -143,7 +145,7 @@
   ]
 }
 ```
-#### image_nodeのstate["slide_json"]（imageとthree_imageが混在する場合）
+#### image_nodeのstate["pages"]（imageとthree_imageが混在する場合）
 ```json
 {
   "pages": [

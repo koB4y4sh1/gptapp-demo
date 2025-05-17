@@ -8,7 +8,7 @@ from openai.types.images_response import ImagesResponse
 from src.utils.logger import get_logger
 from src.infrastructure.azureopenai.images import images_generate
 
-logger = get_logger("application.generate_images")
+logger = get_logger(__name__)
 
 def generate_images(prompts: List[str], save_local: bool = True) -> List[str]:
     """

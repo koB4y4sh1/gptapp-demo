@@ -3,8 +3,10 @@ import uuid
 
 from flask import Blueprint, request, jsonify
 
+from src.domain.model.slides.utils import to_json_compatible
 from src.infrastructure.supabase.slide_storage import save_slide
 from src.domain.langgraph_workflow.workflow import build_main_graph
+from src.domain.model.type.slide import SlideState
 from src.utils.logger import get_logger
 
 logger = get_logger("routes.generate")
@@ -26,22 +28,20 @@ def generate():
             logger.error("⛔ タイトルが指定されていません")
             return jsonify({"error": "タイトルが指定されていません"}), 400
 
-        initial_state = {
-            "title": title,
-            "confirmed": False  
-        }
+        initial_state = SlideState(title=title,)
 
         # フローの実行
         final_state = graph.invoke(initial_state)
+        result_json = to_json_compatible(final_state)
 
         # Supabaseに保存
         save_slide(
             user_id= os.getenv("USER_ID"),
             session_id=session_id,
             title=title,
-            slide_json=final_state["slide_json"]
+            slide_json=result_json["pages"]
         )
-        return jsonify({ "session_id": session_id, "preview": final_state["slide_json"]["pages"] }), 200
+        return jsonify({ "session_id": session_id, "preview": result_json["pages"] }), 200
 
 
     except Exception as e:
