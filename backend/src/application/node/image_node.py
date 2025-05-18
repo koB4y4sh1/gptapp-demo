@@ -1,6 +1,6 @@
 import asyncio
 from src.utils.logger import get_logger
-from src.application.gather_similar_images import gather_similar_images
+from src.domain.logic.gather_similar_images import gather_similar_images
 from src.domain.model.type.template import TemplateType
 from src.domain.model.type.page import Page
 from src.domain.model.type.slide import SlideState

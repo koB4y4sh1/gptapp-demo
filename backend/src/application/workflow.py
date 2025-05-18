@@ -2,12 +2,12 @@ from langgraph.graph import StateGraph
 import os
 import shutil
 
-from src.domain.langgraph_workflow.nodes.check_node import check_node
-from src.domain.langgraph_workflow.nodes.hearing_node import hearing_node
-from src.domain.langgraph_workflow.nodes.layout_node import layout_node
-from src.domain.langgraph_workflow.nodes.slide_creator_node import slide_creator_node
-from src.domain.langgraph_workflow.nodes.image_node import image_node
-from src.domain.langgraph_workflow.nodes.generate_pptx_node import generate_pptx_node
+from src.application.node.check_node import check_node
+from src.application.node.hearing_node import hearing_node
+from src.application.node.layout_node import layout_node
+from src.application.node.slide_creator_node import slide_creator_node
+from src.application.node.image_node import image_node
+from src.application.node.generate_pptx_node import generate_pptx_node
 from src.domain.model.slides.utils import to_json_compatible
 from src.domain.model.type.slide import SlideState
 from src.utils.logger import get_logger

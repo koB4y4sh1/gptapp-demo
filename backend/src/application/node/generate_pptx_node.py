@@ -5,7 +5,7 @@ from datetime import datetime
 
 from src.domain.model.type.page import Page
 from src.utils.logger import get_logger
-from src.application.generate_slide import generate_pptx
+from src.domain.logic.generate_slide import generate_pptx
 from src.domain.model.type.slide import SlideState
 
 logger = get_logger(__name__)
